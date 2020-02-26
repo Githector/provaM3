@@ -10,7 +10,7 @@ import java.util.*;
 public class Main 
 {
 
-    //  FUNCIONA PERÒ NO PRINTA EL MENÚ
+    //  FUNCIONA PERÒ NO PRINTA EL MENÚ DE ADMIN PERÒ SI PREMS 1 O 2 FUNCIONA
     public static final Scanner scan = new Scanner(System.in);
     public static String[] roles = new String[] {"Admin, Reader, Editor"};
     public static void main(String[] args) 
