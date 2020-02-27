@@ -13,7 +13,6 @@ public class Main
 {
 
     public static final Scanner scan = new Scanner(System.in);
-    public static String[] roles = new String[] {"Admin, Reader, Editor"};
     public static void main(String[] args) 
     {
         ArrayList<Post> posts = new ArrayList<>();
