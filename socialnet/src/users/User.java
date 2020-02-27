@@ -11,8 +11,9 @@ public abstract class User
     private String username;
     private String password;
     private String role;
-    private ArrayList<User> following;
+    private ArrayList<String> following;
 
+    
     public User(String username, String password) 
     {
         this.username = username;
@@ -43,11 +44,11 @@ public abstract class User
         this.role = role;
     }
 
-    public ArrayList<User> getFollowing() {
+    public ArrayList<String> getFollowing() {
         return following;
     }
 
-    public void setFollowing(ArrayList<User> following) {
+    public void setFollowing(ArrayList<String> following) {
         this.following = following;
     }
 
@@ -67,7 +68,7 @@ public abstract class User
         return null;
     }
 
-    public static void printMenuWhenLogged()
+    public void printMenuWhenLogged()
     {
         System.out.println("");
     }
@@ -86,6 +87,39 @@ public abstract class User
             scan.nextLine();
         }
     }
+
+    public void deletePost(int id, ArrayList<Post> posts)
+    {
+        for(Post p : posts)
+        {
+            if(posts.indexOf(p) == id-1)
+            {
+                posts.remove(p);
+                break;
+            }
+        }
+    }
+
+    public void printPostsToDelete(ArrayList<Post> posts)
+    {
+        int i = 1;
+        for(Post p : posts)
+        {
+            
+            System.out.println(i+"."+" Date: "+p.getLdt().getDayOfMonth()+"/"+p.getLdt().getMonthValue()+"/"+p.getLdt().getYear()+" - "+p.getLdt().getHour()+":"+p.getLdt().getMinute()+" - "+ "Autor: "+p.getUser().getUsername()+" Title: "+p.getTitle());
+            i++;
+        }
+    }
+
+    public void following(User currentUser)
+    {
+        for(String s : currentUser.getFollowing())
+        {
+            System.out.println(s);
+        }
+    }
+
+    
 
 
     

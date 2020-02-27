@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 public class Reader extends User
 {
+    
     private LocalDate birthDate;
 
     public Reader(String username, String password) {
@@ -23,12 +24,6 @@ public class Reader extends User
         this.birthDate = birthDate;
     }
 
-    
-    public static void printMenuWhenLogged()
-    {
-        System.out.println("");
-    }
-
     public static void printEveryPost(ArrayList<Post> posts)
     {
         Scanner scan = new Scanner(System.in);
@@ -41,6 +36,54 @@ public class Reader extends User
             System.out.println("Title: "+p.getTitle());
             System.out.println("About: "+p.getContent());
             scan.nextLine();
+        }
+    }
+
+    @Override
+    public void printMenuWhenLogged()
+    {
+        System.out.println("**********************************");
+        System.out.println("* 1- Follow a new editor         *");
+        System.out.println("* 2- Following                   *");
+        System.out.println("* 3- Home                        *");
+        System.out.println("* 4- Log out                     *");
+        System.out.println("**********************************");
+    }
+
+    @Override
+    public void deletePost(int id, ArrayList<Post> posts)
+    {
+        for(Post p : posts)
+        {
+            if(posts.indexOf(p) == id-1 && p.getUser().getRole().equalsIgnoreCase("Reader"))
+            {
+                System.out.println("Post deleted succesfully! ");
+                posts.remove(p);
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void printPostsToDelete(ArrayList<Post> posts)
+    {
+        int i = 1;
+        for(Post p : posts)
+        {
+            if(p.getUser().getRole().equalsIgnoreCase("Reader"))
+            {
+                System.out.println(i+"."+" Date: "+p.getLdt().getDayOfMonth()+"/"+p.getLdt().getMonthValue()+"/"+p.getLdt().getYear()+" - "+p.getLdt().getHour()+":"+p.getLdt().getMinute()+" - "+ "Autor: "+p.getUser().getUsername()+" Title: "+p.getTitle());
+                i++;
+            }
+        }
+    }
+
+    @Override
+    public void following(User currentUser)
+    {
+        for(String s : currentUser.getFollowing())
+        {
+            System.out.println(s);
         }
     }
 

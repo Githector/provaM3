@@ -10,14 +10,12 @@ import java.util.*;
 public class Main 
 {
 
-    //  FUNCIONA PERÒ NO PRINTA EL MENÚ DE ADMIN PERÒ SI PREMS 1 O 2 FUNCIONA
     public static final Scanner scan = new Scanner(System.in);
     public static String[] roles = new String[] {"Admin, Reader, Editor"};
     public static void main(String[] args) 
     {
         ArrayList<Post> posts = new ArrayList<>();
         ArrayList<User> users = new ArrayList<>();
-        //hello
         boolean out = false;
         boolean wrongpass = true;
         Function.initCirvi();
@@ -109,12 +107,23 @@ public class Main
                                         Admin.printEveryPost(posts);
                                         break;
                                     case 3: 
+                                        currentUser.printPostsToDelete(posts);
+                                        option = scan.nextInt();
+                                        scan.nextLine();
+                                        currentUser.deletePost(option, posts);
                                         break;
                                     case 4:
+                                        
+                                        Admin.printReaders(users);
+                                        System.out.println("Who would you like to grant Editor permissions to? ");
+                                        username = scan.next();
+                                        Admin.grantEditorRole(username, users);
                                         break;
                                     case 5:
+                                        Admin.printEditors(users);
                                         break;
                                     case 6:
+                                        Admin.printReaders(users);
                                         break;
                                     case 7:
                                         logged = false;
@@ -124,7 +133,42 @@ public class Main
 
                                 break;
 
-                                case "E":
+                                case "Editor":
+                                    switch(option)
+                                    {
+                                        case 1:
+                                        System.out.println("Introduce the post title: ");
+                                        String postTitle = scan.nextLine();
+                                        System.out.println("What is it about: ");
+                                        String postText = scan.nextLine();
+                                        boolean adultContent;
+                                        System.out.println("Is it NSFW content? (Y/N)");
+                                        char isIt = scan.next().charAt(0);
+                                        if(isIt == 'Y' || isIt == 'y') adultContent = true;
+                                        else adultContent = false;
+                                        System.out.println(adultContent);
+                                        LocalDateTime ldt = LocalDateTime.now();
+                                        Post post = new Post(ldt, currentUser, adultContent, postTitle, postText);
+                                        posts.add(post);
+
+                                            break;
+                                        case 2: 
+                                            System.out.println("Introduce the username of the editor you want to follow: (Press enter to display all of them)");
+                                            scan.nextLine();
+                                            Editor.printEditorsToFollow(users, currentUser);
+                                            username = scan.next();
+                                            break;
+                                        case 3:
+                                            currentUser.following(currentUser);
+                                            break;
+                                        case 4:
+
+                                            break;
+                                        case 5:
+                                            logged = false;
+                                            break;
+                                    }
+                                    break;
                             }
                             
                             
