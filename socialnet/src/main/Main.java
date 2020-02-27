@@ -17,6 +17,7 @@ public class Main
     {
         ArrayList<Post> posts = new ArrayList<>();
         ArrayList<User> users = new ArrayList<>();
+        //hello
         boolean out = false;
         boolean wrongpass = true;
         Function.initCirvi();
