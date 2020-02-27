@@ -4,7 +4,9 @@ import functions.*;
 import posts.*;
 import users.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.*;
 
 public class Main 
@@ -83,7 +85,8 @@ public class Main
                             option = scan.nextInt();
                             scan.nextLine();
                             
-                            switch(currentUser.getRole()){
+                            switch(currentUser.getRole())
+                            {
                                 case "Admin":
                                     switch(option)
                                     {
@@ -157,14 +160,39 @@ public class Main
                                             scan.nextLine();
                                             Editor.printEditorsToFollow(users, currentUser);
                                             username = scan.next();
+                                            Editor.followEditor(users, username, currentUser);
                                             break;
                                         case 3:
                                             currentUser.following(currentUser);
                                             break;
                                         case 4:
-
+                                            currentUser.checkHome(currentUser, posts);
                                             break;
                                         case 5:
+                                            logged = false;
+                                            break;
+                                    }
+                                    break;
+
+                                case "Reader":
+                                    
+                                    switch(option)
+                                    {
+                                        case 1:
+                                            System.out.println("Introduce the username of the editor you want to follow: (Press enter to display all of them)");
+                                            scan.nextLine();
+                                            Editor.printEditorsToFollow(users, currentUser);
+                                            username = scan.next();
+                                            Editor.followEditor(users, username, currentUser);
+                                            break;
+                                        case 2:
+                                            currentUser.following(currentUser);
+                                            break;
+                                        case 3:
+                                            
+                                            currentUser.checkHome(currentUser, posts);
+                                            break;
+                                        case 4:
                                             logged = false;
                                             break;
                                     }
@@ -177,6 +205,26 @@ public class Main
 
                     break;
                 case 2:
+                    System.out.println("Introduce the username: ");
+                    username = scan.next();
+                    boolean exists = User.checkIfUsernameExists(username, users);
+                    if(!exists)
+                    {
+                    
+                        System.out.println("Introduce the password ");
+                        password = scan.next();
+                        System.out.println("Introduce your birth date: ");
+                        String[] birthdate = scan.next().split("/");
+                        int[] birthday = Reader.bdToInt(birthdate);
+                        LocalDate bd = Reader.toLocalDate(birthday);
+                        Reader reader = new Reader(username, password);
+                        reader.setAdult(Reader.checkPeriod(bd));
+                        reader.setBirthDate(bd);
+                        User user = reader;
+                        user.setRole("Reader");
+                        users.add(user);
+                        
+                    }
 
                     break;
                 case 3:

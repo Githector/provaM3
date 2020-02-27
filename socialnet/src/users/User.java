@@ -11,7 +11,7 @@ public abstract class User
     private String username;
     private String password;
     private String role;
-    private ArrayList<String> following;
+    private ArrayList<String> following = new ArrayList<>();
 
     
     public User(String username, String password) 
@@ -68,12 +68,13 @@ public abstract class User
         return null;
     }
 
+    
     public void printMenuWhenLogged()
     {
         System.out.println("");
     }
 
-    public static void printEveryPost(ArrayList<Post> posts)
+    public static void printEveryPost(ArrayList<Post> posts, User user)
     {
         Scanner scan = new Scanner(System.in);
         for(Post p : posts)
@@ -117,6 +118,63 @@ public abstract class User
         {
             System.out.println(s);
         }
+    }
+
+    public void checkHome(User currentUser, ArrayList<Post> posts)
+    {
+        for(Post p : posts)
+        {
+            for(String s : currentUser.getFollowing())
+            {
+                if(p.getUser().getUsername().equals(s))
+                {
+                    System.out.println("******************");
+                    System.out.println("Date: "+p.getLdt().getDayOfMonth()+"/"+p.getLdt().getMonthValue()+"/"+p.getLdt().getYear());
+                    System.out.println("Autor: "+p.getUser().getUsername());
+                    System.out.println("NSFW: "+p.isAdult());
+                    System.out.println("Title: "+p.getTitle());
+                    System.out.println("About: "+p.getContent());
+                    
+                }
+            }
+        }
+    }
+
+    public static int[] bdToInt(String[] date)
+    {
+        int[] numb = new int[date.length];
+        for(int x = 0; x < date.length;x++)
+        {
+            numb[x] = Integer.parseInt(date[x]);
+        }
+
+        return numb;
+    }
+
+    public static boolean checkIfUsernameExists(String username, ArrayList<User> users)
+    {
+        boolean exists = false;
+
+        for(User u : users)
+        {
+            if(u.getUsername().equals(username))
+            {
+                System.out.println("This username already exists, try with another one!");
+                return exists = true;
+            }
+        }
+        return exists;
+    }
+
+    public boolean checkIfFollowing(String username, User currentUser)
+    {
+        for(String s : currentUser.getFollowing())
+        {
+            if(s.equals(username)) return true;
+            
+        }
+
+        return false;
     }
 
     
