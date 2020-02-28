@@ -1,6 +1,7 @@
 package users;
 import posts.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 public class Editor extends User
 {
     
@@ -23,7 +24,8 @@ public class Editor extends User
         System.out.println("* 6- Send Message                *");
         System.out.println("* 7- Read Messages               *");
         System.out.println("* 8- Block editor                *");
-        System.out.println("* 9- Log out                     *");
+        System.out.println("* 9- Unblock editor              *");
+        System.out.println("* 10 - Log out                   *");
         System.out.println("**********************************");
     }
 
@@ -104,6 +106,7 @@ public class Editor extends User
     @Override
     public void checkHome(User currentUser, ArrayList<Post> posts)
     {
+        Scanner scan = new Scanner(System.in);
         for(Post p : posts)
         {
             for(String s : currentUser.getFollowing())
@@ -121,6 +124,10 @@ public class Editor extends User
             }
             
         }
+
+        scan.nextLine();
+
+
     }
 
     @Override
@@ -168,15 +175,19 @@ public class Editor extends User
             for(String mess : currentUser.getPrivateMessage())
             {
                 System.out.println("\t"+"You:" +mess);
+                break;
+                
             }
         }
     }
 
     public static void blockUser(User currentUser, User blocked)
     {
+        Scanner scan = new Scanner(System.in);
         System.out.println("User "+blocked.getUsername()+" will now be blocked!");
         currentUser.getFollowing().remove(blocked.getUsername());
         currentUser.getBlocked().add(blocked.getUsername());
+        scan.nextLine();
     }
 
     public boolean checkIfBlocked(String username, User currentUser)
@@ -189,6 +200,42 @@ public class Editor extends User
         }
 
         return false;
+    }
+
+    public static void printBlockedUsers(User currentUser)
+    {
+        System.out.println("Currentlu blocked users: ");
+        System.out.println("******************************");
+        for(String s : currentUser.getBlocked())
+        {
+            System.out.println(s);
+        }
+    }
+
+
+
+    public static void unblockUser(User currentUser, String username)
+    {
+        Scanner scan = new Scanner(System.in);
+        boolean success = false;
+        for(String s : currentUser.getBlocked())
+        {
+            if(s.equals(username))
+            {
+                
+                System.out.println(username+ " is now unblocked!");
+                currentUser.getBlocked().remove(s);
+                success = true;
+                break;
+            }
+        }
+
+        if(!success)
+        {
+            System.out.println("The introduced user is currently not blocked or doesn't exist");
+        }
+        scan.nextLine();
+        
     }
 
 

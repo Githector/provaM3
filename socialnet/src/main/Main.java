@@ -209,6 +209,11 @@ public class Main
                                             
                                             break;
                                         case 9:
+                                            Editor.printBlockedUsers(currentUser);
+                                            username = scan.next();
+                                            Editor.unblockUser(currentUser, username);
+                                            break;
+                                        case 10:
                                             logged = false;
                                             break;
                                     }
