@@ -70,6 +70,10 @@ public abstract class User
         this.blocked = blocked;
     }
 
+    
+
+    
+
 
     
 

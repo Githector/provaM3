@@ -79,6 +79,7 @@ public class Main
                         while(logged)
                         {
                             Function.clear();
+                            if((currentUser.getRole().equals("Editor"))) System.out.println("Pending messages: "+currentUser.getPendingMessages());
                             System.out.println("Role: "+currentUser.getRole());
                             currentUser.printMenuWhenLogged();
                             option = scan.nextInt();

@@ -5,11 +5,20 @@ import java.util.Scanner;
 public class Editor extends User
 {
     
-
+    public int pendingMessages;
 
     public Editor(String username, String password) {
         super(username, password);
     }
+
+    public int getPendingMessages() {
+        return pendingMessages;
+    }
+
+    public void setPendingMessages(int pendingMessages) {
+        this.pendingMessages = pendingMessages;
+    }
+
 
 
     @Override
@@ -29,6 +38,7 @@ public class Editor extends User
         System.out.println("**********************************");
     }
 
+   
 
     @Override
     public void deletePost(int id, ArrayList<Post> posts, User currentUser)
@@ -160,7 +170,8 @@ public class Editor extends User
     @Override
     public void sendMessage(User currentUser, User messaged, String message)
     {
-        currentUser.getPrivateMessage().add(message);
+        messaged.pendingMessages++;
+        messaged.getPrivateMessage().add(message);
         
     }
 
@@ -168,16 +179,10 @@ public class Editor extends User
     @Override
     public void seeMessages(User currentUser, User messaged)
     {
-        for(String message : messaged.getPrivateMessage())
+        currentUser.pendingMessages = 0;
+        for(String s : currentUser.getPrivateMessage())
         {
-            System.out.println(messaged.getUsername()+": "+message+"\n");
-
-            for(String mess : currentUser.getPrivateMessage())
-            {
-                System.out.println("\t"+"You:" +mess);
-                break;
-                
-            }
+            System.out.println(messaged.getUsername()+" said: "+s);
         }
     }
 
@@ -237,6 +242,10 @@ public class Editor extends User
         scan.nextLine();
         
     }
+
+
+
+    
 
 
     
