@@ -109,10 +109,10 @@ public class Main
                                         Admin.printEveryPost(posts);
                                         break;
                                     case 3: 
-                                        currentUser.printPostsToDelete(posts);
+                                        currentUser.printPostsToDelete(posts, currentUser);
                                         option = scan.nextInt();
                                         scan.nextLine();
-                                        currentUser.deletePost(option, posts);
+                                        currentUser.deletePost(option, posts, currentUser);
                                         break;
                                     case 4:
                                         
@@ -168,6 +168,47 @@ public class Main
                                             currentUser.checkHome(currentUser, posts);
                                             break;
                                         case 5:
+                                            currentUser.printPostsToDelete(posts, currentUser);
+                                            option = scan.nextInt();
+                                            scan.nextLine();
+                                            currentUser.deletePost(option, posts, currentUser);
+                                            break;
+                                        case 6:
+                                            currentUser.following(currentUser);
+                                            username = scan.next();
+                                            scan.nextLine();
+                                            boolean canMessage = currentUser.checkIfFollowing(username, currentUser);
+                                            if(canMessage)
+                                            {
+                                                String message = scan.nextLine();
+                                                User messaged = currentUser.getFollowerUser(username, currentUser, users);
+                                                currentUser.sendMessage(currentUser, messaged, message);
+                                                
+                                                
+                                            }
+                                            else System.out.println("You're not following "+ username+", follow them first!");
+
+                                            break;
+                                        case 7:
+                                            currentUser.following(currentUser);
+                                            username = scan.next();
+                                            boolean canRead = currentUser.checkIfFollowing(username, currentUser);
+                                            if(canRead)
+                                            {
+                                                User messaged = currentUser.getFollowerUser(username, currentUser, users);
+                                                currentUser.seeMessages(currentUser, messaged);
+                                            }
+                                            else System.out.println("You're not following "+ username+", follow them first!");
+
+                                            break;
+                                        case 8:
+                                            Editor.printEditorsToFollow(users, currentUser);
+                                            username = scan.next();
+                                            User blocked = currentUser.getFollowerUser(username, currentUser, users);
+                                            Editor.blockUser(currentUser, blocked);
+                                            
+                                            break;
+                                        case 9:
                                             logged = false;
                                             break;
                                     }

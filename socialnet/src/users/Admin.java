@@ -43,7 +43,7 @@ public class Admin extends User
     }
 
     @Override
-    public void printPostsToDelete(ArrayList<Post> posts)
+    public void printPostsToDelete(ArrayList<Post> posts, User currentUser)
     {
         int i = 1;
         
@@ -56,7 +56,7 @@ public class Admin extends User
     }
 
     @Override
-    public void deletePost(int id, ArrayList<Post> posts)
+    public void deletePost(int id, ArrayList<Post> posts,  User currentUser)
     {
         for(Post p : posts)
         {

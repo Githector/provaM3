@@ -19,17 +19,21 @@ public class Editor extends User
         System.out.println("* 2- Follow an editor            *");
         System.out.println("* 3- Following                   *");
         System.out.println("* 4- Home                        *");
-        System.out.println("* 5- Log out                     *");
+        System.out.println("* 5- Delete post                 *");
+        System.out.println("* 6- Send Message                *");
+        System.out.println("* 7- Read Messages               *");
+        System.out.println("* 8- Block editor                *");
+        System.out.println("* 9- Log out                     *");
         System.out.println("**********************************");
     }
 
 
     @Override
-    public void deletePost(int id, ArrayList<Post> posts)
+    public void deletePost(int id, ArrayList<Post> posts, User currentUser)
     {
         for(Post p : posts)
         {
-            if(posts.indexOf(p) == id -1 && p.getUser().getRole() != "Admin")
+            if(posts.indexOf(p) == id -1 && p.getUser().getRole() != "Admin" && p.getUser().getUsername().equals(currentUser.getUsername()))
             {
                 System.out.println("Post deleted succesfully!");
                 posts.remove(p);
@@ -38,14 +42,16 @@ public class Editor extends User
         }
     }
 
-    public void printPostsToDelete(ArrayList<Post> posts)
+    public void printPostsToDelete(ArrayList<Post> posts, User currentUser)
     {
         int i = 1;
         for(Post p : posts)
         {
-            if(p.getUser().getRole() != "Admin")
-            System.out.println(i+"."+" Date: "+p.getLdt().getDayOfMonth()+"/"+p.getLdt().getMonthValue()+"/"+p.getLdt().getYear()+" - "+p.getLdt().getHour()+":"+p.getLdt().getMinute()+" - "+ "Autor: "+p.getUser().getUsername()+" Title: "+p.getTitle());
-            i++;
+            if(p.getUser().getRole() != "Admin" && p.getUser().getUsername().equals(currentUser.getUsername()))
+            {
+                System.out.println(i+"."+" Date: "+p.getLdt().getDayOfMonth()+"/"+p.getLdt().getMonthValue()+"/"+p.getLdt().getYear()+" - "+p.getLdt().getHour()+":"+p.getLdt().getMinute()+" - "+ "Autor: "+p.getUser().getUsername()+" Title: "+p.getTitle());
+                i++;
+            }
         }
     }
 
@@ -68,7 +74,7 @@ public class Editor extends User
         boolean success = false;
         for(User u : users)
         {
-            if(u.getUsername().equals(username) && u.getRole().equalsIgnoreCase("Editor") && u.getUsername()!= currentUser.getUsername() && !currentUser.checkIfFollowing(username, currentUser))
+            if(u.getUsername().equals(username) && u.getRole().equalsIgnoreCase("Editor") && u.getUsername()!= currentUser.getUsername() && !currentUser.checkIfFollowing(username, currentUser) && !currentUser.checkIfBlocked(username, currentUser))
             {
                 success = true;
                 System.out.println(u.getUsername()+" followed!");
@@ -79,7 +85,7 @@ public class Editor extends User
 
         if(!success)
         {
-            System.out.println("Check that you introduced the username properly or perhaps you're following this editor already");
+            System.out.println("Check that you introduced the username properly, perhaps you're following this editor already or you blocked this user");
         }
     }
 
@@ -94,6 +100,7 @@ public class Editor extends User
         }
     }
 
+    //when blocking remove this person from followers and if they try to foloow back display error message
     @Override
     public void checkHome(User currentUser, ArrayList<Post> posts)
     {
@@ -109,9 +116,10 @@ public class Editor extends User
                     System.out.println("NSFW: "+p.isAdult());
                     System.out.println("Title: "+p.getTitle());
                     System.out.println("About: "+p.getContent());
-                    
+                        
                 }
             }
+            
         }
     }
 
@@ -127,6 +135,62 @@ public class Editor extends User
 
         return false;
     }
+
+    @Override
+    public User getFollowerUser(String username, User currentUser, ArrayList<User> users)
+    {
+       for(User u : users)
+       {
+           if(u.getUsername().equals(username))
+           {
+               return u;
+           }
+       }
+       return null;
+        
+    }
+
+    @Override
+    public void sendMessage(User currentUser, User messaged, String message)
+    {
+        currentUser.getPrivateMessage().add(message);
+        
+    }
+
+
+    @Override
+    public void seeMessages(User currentUser, User messaged)
+    {
+        for(String message : messaged.getPrivateMessage())
+        {
+            System.out.println(messaged.getUsername()+": "+message+"\n");
+
+            for(String mess : currentUser.getPrivateMessage())
+            {
+                System.out.println("\t"+"You:" +mess);
+            }
+        }
+    }
+
+    public static void blockUser(User currentUser, User blocked)
+    {
+        System.out.println("User "+blocked.getUsername()+" will now be blocked!");
+        currentUser.getFollowing().remove(blocked.getUsername());
+        currentUser.getBlocked().add(blocked.getUsername());
+    }
+
+    public boolean checkIfBlocked(String username, User currentUser)
+    {
+        for(String s : currentUser.getBlocked())
+        {
+            
+            if(s.equals(username)) return true;
+            
+        }
+
+        return false;
+    }
+
 
     
     

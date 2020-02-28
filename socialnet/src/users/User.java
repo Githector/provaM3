@@ -12,6 +12,8 @@ public abstract class User
     private String password;
     private String role;
     private ArrayList<String> following = new ArrayList<>();
+    private ArrayList<String> privateMessage = new ArrayList<>();
+    private ArrayList<String> blocked = new ArrayList<>();
 
     
     public User(String username, String password) 
@@ -52,6 +54,25 @@ public abstract class User
         this.following = following;
     }
 
+    public ArrayList<String> getPrivateMessage() {
+        return privateMessage;
+    }
+
+    public void setPrivateMessage(ArrayList<String> privateMessage) {
+        this.privateMessage = privateMessage;
+    }
+
+    public ArrayList<String> getBlocked() {
+        return blocked;
+    }
+
+    public void setBlocked(ArrayList<String> blocked) {
+        this.blocked = blocked;
+    }
+
+
+    
+
     public static User canLogIn(ArrayList<User> users, String username, String password)
     {
         
@@ -89,7 +110,7 @@ public abstract class User
         }
     }
 
-    public void deletePost(int id, ArrayList<Post> posts)
+    public void deletePost(int id, ArrayList<Post> posts, User currentUser)
     {
         for(Post p : posts)
         {
@@ -101,7 +122,7 @@ public abstract class User
         }
     }
 
-    public void printPostsToDelete(ArrayList<Post> posts)
+    public void printPostsToDelete(ArrayList<Post> posts, User currentUser)
     {
         int i = 1;
         for(Post p : posts)
@@ -176,6 +197,56 @@ public abstract class User
 
         return false;
     }
+
+    public void sendMessage(User currentUser, User messaged, String message)
+    {
+        
+
+    }
+
+    public User getFollowerUser(String username, User currentUser, ArrayList<User> users)
+    {
+       for(User u : users)
+       {
+           if(u.getUsername().equals(username))
+           {
+               return u;
+           }
+       }
+       return null;
+        
+    }
+
+    public void seeMessages(User currentUser, User messaged)
+    {
+        for(String message : currentUser.getPrivateMessage())
+        {
+            System.out.println("You: "+message);
+
+            for(String mess : messaged.getPrivateMessage())
+            {
+                System.out.println("\t"+messaged.getUsername()+": "+mess);
+            }
+            
+        }
+    }
+
+    public boolean checkIfBlocked(String username, User currentUser)
+    {
+        for(String s : currentUser.getBlocked())
+        {
+            
+            if(s.equals(username)) return true;
+            
+        }
+
+        return false;
+    }
+
+   
+
+
+   
 
     
 
