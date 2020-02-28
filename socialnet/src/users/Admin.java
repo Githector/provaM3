@@ -104,8 +104,10 @@ public class Admin extends User
             {
                 Editor editor = new Editor(u.getUsername(), u.getPassword());
                 editor.setRole("Editor");
+                editor.setPendingMessages(0);
                 users.remove(u);
                 users.add(editor);
+
                 System.out.println("Editor role granted! ");
                 success = true;
                 break;

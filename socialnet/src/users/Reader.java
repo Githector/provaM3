@@ -126,13 +126,8 @@ public class Reader extends User
         return false;
     }
 
-    @Override
-    public void sendMessage(User currentUser, User messaged, String message)
-    {
-        currentUser.getPrivateMessage().add(message);
-        
-    }
 
+    
 
     
 

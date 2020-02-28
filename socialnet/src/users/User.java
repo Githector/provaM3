@@ -2,7 +2,7 @@ package users;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-
+import messages.*;
 import posts.Post;
 import users.*;
 
@@ -11,8 +11,8 @@ public abstract class User
     private String username;
     private String password;
     private String role;
+    private int pendingMessages;
     private ArrayList<String> following = new ArrayList<>();
-    private ArrayList<String> privateMessage = new ArrayList<>();
     private ArrayList<String> blocked = new ArrayList<>();
 
     
@@ -54,20 +54,20 @@ public abstract class User
         this.following = following;
     }
 
-    public ArrayList<String> getPrivateMessage() {
-        return privateMessage;
-    }
-
-    public void setPrivateMessage(ArrayList<String> privateMessage) {
-        this.privateMessage = privateMessage;
-    }
-
     public ArrayList<String> getBlocked() {
         return blocked;
     }
 
     public void setBlocked(ArrayList<String> blocked) {
         this.blocked = blocked;
+    }
+
+    public int getPendingMessages() {
+        return pendingMessages;
+    }
+
+    public void setPendingMessages(int pendingMessages) {
+        this.pendingMessages = pendingMessages;
     }
 
     
@@ -221,19 +221,7 @@ public abstract class User
         
     }
 
-    public void seeMessages(User currentUser, User messaged)
-    {
-        for(String message : currentUser.getPrivateMessage())
-        {
-            System.out.println("You: "+message);
-
-            for(String mess : messaged.getPrivateMessage())
-            {
-                System.out.println("\t"+messaged.getUsername()+": "+mess);
-            }
-            
-        }
-    }
+    
 
     public boolean checkIfBlocked(String username, User currentUser)
     {
@@ -246,6 +234,46 @@ public abstract class User
 
         return false;
     }
+
+    public void printMessages(ArrayList<Message> messages, User currentUser)
+    {
+        System.out.println("INBOX");
+        System.out.println("**************************");
+        for(Message m : messages)
+        {
+            if(m.getUser().getUsername().equals(currentUser.getUsername()))
+            {
+                System.out.println(m.getUser().getUsername()+"@cirvianum.cat"+" - "+m.getLd().getDayOfMonth()+"/"+m.getLd().getMonthValue()+"/"+m.getLd().getYear()+" - "+m.getLd().getHour()+":"+m.getLd().getMinute());
+                System.out.println(m.getContent());
+            }
+        }
+    }
+
+    public boolean amaIBlocked(String username, User currentUser, ArrayList<User> users)
+    {
+        
+       for(User u : users)
+       {
+           if(u.getUsername().equals(username))
+           {
+               User us = u;
+               for(String s : us.getBlocked())
+               {
+                   if(currentUser.getUsername().equals(s))
+                   {
+                       return true;
+                   }
+               }
+           }
+       }
+
+        return false;
+    }
+
+
+    
+
+
 
    
 

@@ -1,24 +1,18 @@
 package users;
+
 import posts.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import messages.Message;
 public class Editor extends User
 {
     
-    public int pendingMessages;
+    
 
     public Editor(String username, String password) {
         super(username, password);
     }
-
-    public int getPendingMessages() {
-        return pendingMessages;
-    }
-
-    public void setPendingMessages(int pendingMessages) {
-        this.pendingMessages = pendingMessages;
-    }
-
 
 
     @Override
@@ -45,7 +39,7 @@ public class Editor extends User
     {
         for(Post p : posts)
         {
-            if(posts.indexOf(p) == id -1 && p.getUser().getRole() != "Admin" && p.getUser().getUsername().equals(currentUser.getUsername()))
+            if( id-1 == posts.indexOf(p) && p.getUser().getRole() != "Admin" && p.getUser().getUsername().equals(currentUser.getUsername()))
             {
                 System.out.println("Post deleted succesfully!");
                 posts.remove(p);
@@ -74,7 +68,7 @@ public class Editor extends User
         System.out.println("--------------------------------------");
         for(User u : users)
         {
-            if(u.getRole().equalsIgnoreCase("Editor") && u.getUsername()!= currentUser.getUsername())
+            if(u.getRole().equalsIgnoreCase("Editor") && u.getUsername()!= currentUser.getUsername() && !currentUser.checkIfFollowing(u.getUsername(), currentUser))
             {
                 System.out.println(u.getUsername());
             }
@@ -84,6 +78,7 @@ public class Editor extends User
     public static void followEditor(ArrayList<User> users, String username, User currentUser)
     {
         boolean success = false;
+        Scanner scan = new Scanner(System.in);
         for(User u : users)
         {
             if(u.getUsername().equals(username) && u.getRole().equalsIgnoreCase("Editor") && u.getUsername()!= currentUser.getUsername() && !currentUser.checkIfFollowing(username, currentUser) && !currentUser.checkIfBlocked(username, currentUser))
@@ -99,17 +94,21 @@ public class Editor extends User
         {
             System.out.println("Check that you introduced the username properly, perhaps you're following this editor already or you blocked this user");
         }
+        scan.nextLine();
     }
 
     @Override
     public void following(User currentUser)
     {
+        Scanner scan = new Scanner(System.in);
         System.out.println("Following: ");
         System.out.println("********************");
         for(String s : currentUser.getFollowing())
         {
             System.out.println(s);
         }
+        scan.nextLine();
+
     }
 
     //when blocking remove this person from followers and if they try to foloow back display error message
@@ -167,24 +166,7 @@ public class Editor extends User
         
     }
 
-    @Override
-    public void sendMessage(User currentUser, User messaged, String message)
-    {
-        messaged.pendingMessages++;
-        messaged.getPrivateMessage().add(message);
-        
-    }
-
-
-    @Override
-    public void seeMessages(User currentUser, User messaged)
-    {
-        currentUser.pendingMessages = 0;
-        for(String s : currentUser.getPrivateMessage())
-        {
-            System.out.println(messaged.getUsername()+" said: "+s);
-        }
-    }
+   
 
     public static void blockUser(User currentUser, User blocked)
     {
@@ -192,6 +174,7 @@ public class Editor extends User
         System.out.println("User "+blocked.getUsername()+" will now be blocked!");
         currentUser.getFollowing().remove(blocked.getUsername());
         currentUser.getBlocked().add(blocked.getUsername());
+        blocked.getFollowing().remove(currentUser.getUsername());
         scan.nextLine();
     }
 
@@ -242,6 +225,59 @@ public class Editor extends User
         scan.nextLine();
         
     }
+
+    public static void printFollowing(User currentUser)
+    {
+        System.out.println("Following ");
+        System.out.println("*****************************");
+        for(String s : currentUser.getFollowing())
+        {
+            System.out.println(s);
+        }
+    }
+
+    @Override
+    public void printMessages(ArrayList<Message> messages, User currentUser)
+    {
+        currentUser.setPendingMessages(0);
+        System.out.println("INBOX");
+        System.out.println("**************************");
+        for(Message m : messages)
+        {
+            if(!m.getUser().getUsername().equals(currentUser.getUsername()) && m.getDest().getUsername().equals(currentUser.getUsername()))
+            {
+                System.out.println(m.getUser().getUsername()+"@cirvianum.cat"+" - "+m.getLd().getDayOfMonth()+"/"+m.getLd().getMonthValue()+"/"+m.getLd().getYear()+" - "+m.getLd().getHour()+":"+m.getLd().getMinute());
+                System.out.println("About: "+m.getContent());
+                System.out.println("**************************");
+            }
+        }
+    }
+
+    @Override
+    public boolean amaIBlocked(String username, User currentUser, ArrayList<User> users)
+    {
+        
+       for(User u : users)
+       {
+           if(u.getUsername().equals(username))
+           {
+               User us = u;
+               for(String s : us.getBlocked())
+               {
+                   if(currentUser.getUsername().equals(s))
+                   {
+                       return false;
+                   }
+               }
+           }
+       }
+
+        return true;
+    }
+
+
+
+
 
 
 

@@ -3,7 +3,7 @@ package main;
 import functions.*;
 import posts.*;
 import users.*;
-
+import messages.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -15,6 +15,8 @@ public class Main
     public static final Scanner scan = new Scanner(System.in);
     public static void main(String[] args) 
     {
+        int pendingMessages = 0;
+        ArrayList<Message> messages = new ArrayList<>();
         ArrayList<Post> posts = new ArrayList<>();
         ArrayList<User> users = new ArrayList<>();
         boolean out = false;
@@ -160,7 +162,15 @@ public class Main
                                             scan.nextLine();
                                             Editor.printEditorsToFollow(users, currentUser);
                                             username = scan.next();
-                                            Editor.followEditor(users, username, currentUser);
+                                            boolean notBlocked = currentUser.amaIBlocked(username, currentUser, users);
+                                            if(!notBlocked)
+                                            {
+                                                System.out.println("You can't follow this user because you're in his/her blocklist!");
+                                            }
+                                            else
+                                            {
+                                                Editor.followEditor(users, username, currentUser);
+                                            }
                                             break;
                                         case 3:
                                             currentUser.following(currentUser);
@@ -176,34 +186,38 @@ public class Main
                                             break;
                                         case 6:
                                             currentUser.following(currentUser);
+                                            System.out.println("To who you'd like to send the message to? ");
                                             username = scan.next();
                                             scan.nextLine();
                                             boolean canMessage = currentUser.checkIfFollowing(username, currentUser);
+                                           
                                             if(canMessage)
                                             {
-                                                String message = scan.nextLine();
+                                                System.out.println("What is the message about: ");
+                                                String text = scan.nextLine();
                                                 User messaged = currentUser.getFollowerUser(username, currentUser, users);
-                                                currentUser.sendMessage(currentUser, messaged, message);
+                                                Message message = new Message( ldt = LocalDateTime.now(),currentUser, text);
+                                                message.setDest(messaged);
+                                                messages.add(message);
+                                                messaged.setPendingMessages(messaged.getPendingMessages()+1);
+                                                System.out.println("Message sent!");
+                                                 
                                                 
                                                 
                                             }
-                                            else System.out.println("You're not following "+ username+", follow them first!");
+                                            else System.out.println("You're not following '"+ username+"', follow them first!");
 
                                             break;
                                         case 7:
-                                            currentUser.following(currentUser);
-                                            username = scan.next();
-                                            boolean canRead = currentUser.checkIfFollowing(username, currentUser);
-                                            if(canRead)
-                                            {
-                                                User messaged = currentUser.getFollowerUser(username, currentUser, users);
-                                                currentUser.seeMessages(currentUser, messaged);
-                                            }
-                                            else System.out.println("You're not following "+ username+", follow them first!");
+                                          
+                                            currentUser.printMessages(messages, currentUser);
+                                            scan.nextLine();
+                                            
+                                          
 
                                             break;
                                         case 8:
-                                            Editor.printEditorsToFollow(users, currentUser);
+                                            Editor.printFollowing(currentUser);
                                             username = scan.next();
                                             User blocked = currentUser.getFollowerUser(username, currentUser, users);
                                             Editor.blockUser(currentUser, blocked);
