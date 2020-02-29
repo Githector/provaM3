@@ -50,13 +50,14 @@ public class Editor extends User
 
     public void printPostsToDelete(ArrayList<Post> posts, User currentUser)
     {
-        int i = 1;
+        
         for(Post p : posts)
         {
             if(p.getUser().getRole() != "Admin" && p.getUser().getUsername().equals(currentUser.getUsername()))
             {
+                int i = posts.indexOf(p)+1;
                 System.out.println(i+"."+" Date: "+p.getLdt().getDayOfMonth()+"/"+p.getLdt().getMonthValue()+"/"+p.getLdt().getYear()+" - "+p.getLdt().getHour()+":"+p.getLdt().getMinute()+" - "+ "Autor: "+p.getUser().getUsername()+" Title: "+p.getTitle());
-                i++;
+                
             }
         }
     }
